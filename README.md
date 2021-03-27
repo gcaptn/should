@@ -1,11 +1,11 @@
 # should
 
-Value matchers for Lua
+Dead simple matchers for Lua
 
 ## Example Usage
 
 ```lua
-local e = require "should"
+local e = require("should")
 
 e(2 + 2)
   .should.equal(4)
@@ -14,9 +14,3 @@ e(2 + 2)
 ```
 
 More matchers can be found in the ``Matchers.lua`` file.
-
-## To Do
-
-* Comment
-* Type check
-* Test
