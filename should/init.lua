@@ -1,8 +1,9 @@
 local Matchers
+local relpath = (...)
 if game then
 	Matchers = require(script.Parent.Matchers)
 else
-	Matchers = require("./Matchers")
+	Matchers = require(relpath.."/Matchers")
 end
 local Expression = {}
 
@@ -39,7 +40,7 @@ end
 
 function Expression:_reset()
 	local new = Expression.new(self.value)
-	for i, v in pairs(new) do 
+	for i, v in pairs(new) do
 		self[i] = v
 	end
 end

@@ -76,6 +76,8 @@ end
 -- Functions
 
 function Matchers:pass()
+	assert(type(self.value) == "function", "Expression value must be a function")
+
 	local success, err = pcall(self.value)
 	self.success = success
 	self.fail = {
@@ -87,6 +89,8 @@ function Matchers:pass()
 end
 
 function Matchers:error()
+	assert(type(self.value) == "function", "Expression value must be a function")
+
 	local success, err = pcall(self.value)
 	self.success = not success
 	self.fail = {
@@ -97,6 +101,9 @@ function Matchers:error()
 end
 
 function Matchers:throw(message)
+	assert(type(self.value) == "function", "Expression value must be a function")
+	assert(type(message) == "string", "Expected error message must be a string")
+
 	local _, err = pcall(self.value)
 	self.success = err == message
 	self.fail = {
@@ -110,26 +117,28 @@ end
 
 
 function Matchers:Return(...)
+	assert(type(self.value) == "function", "Expression value must be a function")
+
 	local expectedReturns = {...}
 	local returns = {self.value()}
 
 	if self.negate then
 		 for i, v in ipairs(expectedReturns) do
-		  if returns[i] == v then
+			if returns[i] == v then
 				self.success = true
 				self.fail.negate = ("Function should not return %s at argument %d")
 					:format(tostring(v), i)
 				break
-		  end
+			end
 		end
 	else
 		for i, v in ipairs(expectedReturns) do
-		  if returns[i] ~= v then
+			if returns[i] ~= v then
 				self.success = false
 				self.fail.normal = ("Function should return %s at argument %d, got %s")
 					:format(tostring(v), i, tostring(returns[i]))
 				break
-		  end
+			end
 		end
 	end
 
@@ -148,6 +157,9 @@ function Matchers:equal(x)
 end
 
 function Matchers:beGreaterThan(x)
+	assert(type(self.value) == "number", "Expression value must be a number")
+	assert(type(x) == "number", "Matching value must be a number")
+
 	self.success = self.value > x
 	self.fail = {
 		normal = ("Number %d should be greater than %d")
@@ -159,6 +171,9 @@ function Matchers:beGreaterThan(x)
 end
 
 function Matchers:beGreaterThanOrEqualTo(x)
+	assert(type(self.value) == "number", "Expression value must be a number")
+	assert(type(x) == "number", "Matching value must be a number")
+
 	self.success = self.value >= x
 	self.fail = {
 		normal = ("Number %d should be greater than or equal to %d")
@@ -170,6 +185,9 @@ function Matchers:beGreaterThanOrEqualTo(x)
 end
 
 function Matchers:beLessThan(x)
+	assert(type(self.value) == "number", "Expression value must be a number")
+	assert(type(x) == "number", "Matching value must be a number")
+
 	self.success = self.value < x
 	self.fail = {
 		normal = ("Number %d should be less than %d"):format(self.value, x);
@@ -179,6 +197,9 @@ function Matchers:beLessThan(x)
 end
 
 function Matchers:beLessThanOrEqualTo(x)
+	assert(type(self.value) == "number", "Expression value must be a number")
+	assert(type(x) == "number", "Matching value must be a number")
+
 	self.success = self.value >= x
 	self.fail = {
 		normal = ("Number %d should be less than or equal to %d")
@@ -190,6 +211,9 @@ function Matchers:beLessThanOrEqualTo(x)
 end
 
 function Matchers:beEvenlyDivisibleBy(x)
+	assert(type(self.value) == "number", "Expression value must be a number")
+	assert(type(x) == "number", "Divisor value must be a number")
+
 	local remainder = self.value % x
 	self.success = remainder == 0
 	self.fail = {
@@ -202,6 +226,8 @@ function Matchers:beEvenlyDivisibleBy(x)
 end
 
 function Matchers:beAnInteger()
+	assert(type(self.value) == "number", "Expression value must be a number")
+
 	self.success = math.floor(self.value) == self.value
 	self.fail = {
 		normal = ("Number %d should be an integer"):format(self.value);
@@ -211,6 +237,8 @@ function Matchers:beAnInteger()
 end
 
 function Matchers:haveDecimals()
+	assert(type(self.value) == "number", "Expression value must be a number")
+
 	self.success = math.floor(self.value) == self.value
 	self.fail = {
 		normal = ("Value %d should have decimals"):format(self.value);
@@ -222,6 +250,9 @@ end
 -- Strings
 
 function Matchers:match(pattern)
+	assert(type(self.value) == "string", "Expression value must be a string")
+	assert(type(pattern) == "string", "Matching pattern must be a string")
+
 	local match = self.value:match(pattern)
 	self.success = match ~= nil
 	self.fail = {
@@ -236,6 +267,9 @@ end
 -- Tables
 
 function Matchers:containKey(key)
+	assert(type(self.value) == "table", "Expression value must be a table")
+	assert(key ~= nil, "Key must not be nil")
+
 	local value = self[key]
 	self.success = value ~= nil
 	self.fail = {
@@ -248,8 +282,10 @@ function Matchers:containKey(key)
 end
 
 function Matchers:containValue(value)
-	local foundKey
+	assert(type(self.value) == "table", "Expression value must be a table")
+	assert(value ~= nil, "Value must not be nil")
 
+	local foundKey
 	for i, v in pairs(self.value) do
 		if v == value then
 			self.success = true
@@ -268,6 +304,8 @@ function Matchers:containValue(value)
 end
 
 function Matchers:beAnArray()
+	assert(type(self.value) == "table", "Expression value must be a table")
+
 	self.success = true
 	local nonNumberKey
 
@@ -289,6 +327,8 @@ function Matchers:beAnArray()
 end
 
 function Matchers:beAnArrayOfLength(x)
+	assert(type(self.value) == "table", "Expression value must be a table")
+
 	local length = #self.value
 	self.success = x == length
 	self.fail = {
@@ -297,6 +337,5 @@ function Matchers:beAnArrayOfLength(x)
 	}
 	self:evaluate()
 end
-
 
 return Matchers
