@@ -31,7 +31,7 @@ function Expression:evaluate()
 		end
 	else
 		if not self.success then 
-			error("Expression failed:\n"..self.fail.negate)
+			error("Expression failed:\n"..self.fail.normal)
 		end
 	end
 
