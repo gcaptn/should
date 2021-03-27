@@ -67,7 +67,7 @@ function Matchers:beNil()
 	self.fail = {
 		normal = ("Value should be nil, got %s")
 			:format(tostring(self.value));
-		negate = ("value should not be nil, got %s")
+		negate = ("Value should not be nil, got %s")
 			:format(tostring(self.value));
 	}
 	self:evaluate()
@@ -90,7 +90,7 @@ function Matchers:error()
 	local success, err = pcall(self.value)
 	self.success = not success
 	self.fail = {
-		normal = "Function should error, but it didn't";
+		normal = "Function should error";
 		negate = ("Function should not error, got error %s"):format(err)
 	}
 	self:evaluate()
@@ -225,10 +225,10 @@ function Matchers:match(pattern)
 	local match = self.value:match(pattern)
 	self.success = match ~= nil
 	self.fail = {
-		normal = ("String \"%s\" should match pattern \"%s\""):
-			format(self.value, pattern);
-		negate = ("String \"%s\" should match pattern \"%s\", instead matched \"%s\""):
-			format(self.value, pattern, match)
+		normal = ("String \"%s\" should match pattern \"%s\", instead matched \"%s\""):
+			format(self.value, pattern, tostring(match));
+		negate = ("String \"%s\" should not match pattern \"%s\", instead matched \"%s\""):
+			format(self.value, pattern, tostring(match))
 	}
 	self:evaluate()
 end
@@ -239,8 +239,10 @@ function Matchers:containKey(key)
 	local value = self[key]
 	self.success = value ~= nil
 	self.fail = {
-		normal = ("Table should contain key %s"):format(key, value);
-		negate = ("Table should not contain key %s, has a value of %s"):format(key, value);
+		normal = ("Table should contain key %s")
+			:format(tostring(key), tostring(value));
+		negate = ("Table should not contain key %s, has a value of %s")
+			:format(tostring(key), tostring(value));
 	}
 	self:evaluate()
 end
@@ -257,9 +259,9 @@ function Matchers:containValue(value)
 	end
 
 	self.fail = {
-		normal = ("Table should have value %s")
+		normal = ("Table should contain value %s")
 			:format(tostring(value));
-		negate = ("Table should not have value %s, found at key %s")
+		negate = ("Table should not contain value %s, found at key %s")
 			:format(tostring(value), foundKey)
 	}
 	self:evaluate()
@@ -278,7 +280,8 @@ function Matchers:beAnArray()
 	end
 
 	self.fail = {
-		normal = ("Table should be an array, found a non-number key %s"):format(nonNumberKey);
+		normal = ("Table should be an array, found a non-number key %s")
+			:format(tostring(nonNumberKey));
 		negate = "Table should not be an array";
 	}
 
@@ -289,8 +292,8 @@ function Matchers:beAnArrayOfLength(x)
 	local length = #self.value
 	self.success = x == length
 	self.fail = {
-		normal = ("Array should be of length %s, instead its length is %s"):format(x, length);
-		negate = ("Array should not be of length %s"):format(x);
+		normal = ("Array should be of length %d, instead its length is %d"):format(x, length);
+		negate = ("Array should not be of length %d"):format(x);
 	}
 	self:evaluate()
 end
