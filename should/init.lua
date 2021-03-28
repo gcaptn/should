@@ -1,9 +1,8 @@
 local Matchers
-local relpath = (...)
 if game then
 	Matchers = require(script.Parent.Matchers)
 else
-	Matchers = require(relpath.."/Matchers")
+	Matchers = require((...).."/Matchers")
 end
 local Expression = {}
 

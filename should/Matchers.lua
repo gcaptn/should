@@ -27,6 +27,7 @@ if isRoblox then
 	end
 
 	function Matchers:beOfClass(className)
+		assert(typeof(self.value) == "Instance", "Expression value must be an Instance")
 		self.success = self.value.className == className
 		self.fail = {
 			normal = ("Instance should be of class %s, got instance %s of type %s")
